@@ -2,6 +2,7 @@ package app.controller;
 
 import app.StudentCalc;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,8 +16,30 @@ public class LoanCalcViewController implements Initializable   {
 	@FXML
 	private TextField LoanAmount;
 	
+	@FXML
+	private TextField InterestRate;
+	
+	@FXML
+	private TextField Term;
+	
+	@FXML
+	private TextField FirstDate;
+	
+	@FXML
+	private TextField AdditionalPayment;
+	
+	@FXML
+	private Label lblTotalPayments;
+	
+	@FXML
+	private Label lblTotalInterest;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		//this.lblTotalPayments.setText("0.00");
+		//this.lblTotalInterest.setText("0.00");
+		
 	}
 
 	public void setMainApp(StudentCalc sc) {
@@ -34,6 +57,9 @@ public class LoanCalcViewController implements Initializable   {
 
 		System.out.println("Amount: " + LoanAmount.getText());
 		double dLoanAmount = Double.parseDouble(LoanAmount.getText());
-		System.out.println("Amount: " + dLoanAmount);		
+		System.out.println("Amount: " + dLoanAmount);
+		
+		this.lblTotalPayments.setText("test");
+		
 	}
 }
