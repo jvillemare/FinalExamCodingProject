@@ -101,8 +101,16 @@ public class LoanCalcViewController implements Initializable   {
 		double dInterest, dPrincipal, dEndingBalance = dLoanAmount;
 		
 		for(int i = 1; i < dTerm * 12; i++) {
-			dInterest = dEndingBalance * (dInterestRate/12);
-			dPrincipal = PMT - dInterest;
+			if(dEndingBalance != 0.00) {
+				dInterest = dEndingBalance * (dInterestRate/12);
+				dPrincipal = PMT - dInterest + dAdditionalPayments;
+			} else {
+				// loan payed off
+				dInterest = 0.00;
+				dPrincipal = 0.00;
+				dAdditionalPayments = 0.00;
+				PMT = 0.00;
+			}
 			
 			if(PMT + dAdditionalPayments <= dEndingBalance)
 				dEndingBalance -= dPrincipal;
