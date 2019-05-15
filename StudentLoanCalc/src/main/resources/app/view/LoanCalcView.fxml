@@ -78,7 +78,7 @@
             </HBox>
             <HBox prefHeight="231.0" prefWidth="651.0">
                <children>
-                  <TableView prefHeight="231.0" prefWidth="815.0">
+                  <TableView fx:id="loanPaymentsTable" prefHeight="231.0" prefWidth="815.0">
                     <columns>
                       <TableColumn prefWidth="75.0" text="Payment #" />
                       <TableColumn prefWidth="114.0" text="Due Date" />
