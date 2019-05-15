@@ -1,13 +1,16 @@
 package app.controller;
 
+import java.time.LocalDate;
+
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 public class Payment {
 	
 	private SimpleIntegerProperty id;
 	
-	private SimpleIntegerProperty dueDate;
+	private SimpleStringProperty dueDate;
 	
 	private SimpleDoubleProperty payment;
 	
@@ -19,11 +22,11 @@ public class Payment {
 	
 	private SimpleDoubleProperty balance;
 	
-	public Payment(int id, int dueDate, double payment, 
+	public Payment(int id, LocalDate dueDate, double payment, 
 			double additionalPayment, double interest, double principal,
 			double balance) {
 		this.id = new SimpleIntegerProperty(id);
-		this.dueDate = new SimpleIntegerProperty(dueDate);
+		this.dueDate = new SimpleStringProperty(dueDate.toString());
 		this.payment = new SimpleDoubleProperty(payment);
 		this.additionalPayment = new SimpleDoubleProperty(additionalPayment);
 		this.interest = new SimpleDoubleProperty(interest);
@@ -35,7 +38,7 @@ public class Payment {
 		return id.get();
 	}
 
-	public int getDueDate() {
+	public String getDueDate() {
 		return dueDate.get();
 	}
 
@@ -63,8 +66,8 @@ public class Payment {
 		this.id.set(id);
 	}
 
-	public void setDueDate(int dueDate) {
-		this.dueDate.set(dueDate);
+	public void setDueDate(LocalDate dueDate) {
+		this.dueDate.set(dueDate.toString());
 	}
 
 	public void setPayment(double payment) {

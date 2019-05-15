@@ -11,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
-import java.util.LinkedList;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import org.apache.poi.ss.formula.functions.FinanceLib;
@@ -72,6 +72,7 @@ public class LoanCalcViewController implements Initializable   {
 	 * @version 1.0
 	 * @param event
 	 */
+	@SuppressWarnings("unchecked")
 	@FXML
 	private void btnCalcLoan(ActionEvent event) {
 		
@@ -79,65 +80,21 @@ public class LoanCalcViewController implements Initializable   {
 		double dLoanAmount = Double.parseDouble(LoanAmount.getText());
 		double dInterestRate = Double.parseDouble(InterestRate.getText());
 		double dTerm = Double.parseDouble(Term.getText());
-		double dFirstDate = Double.parseDouble(FirstDate.getText());
+		String dFirstDate = FirstDate.getText();
 		double dAdditionalPayments = Double.parseDouble(AdditionalPayment.getText());
 		
-		double PMT = Math.abs(
-				FinanceLib.pmt(
-						dInterestRate / 12, 
-						dTerm * 12, 
-						dLoanAmount, 
-						0,
-						false)
-				);
+		//System.out.println("Amount: " + LoanAmount.getText());
+		//System.out.println("Amount: " + dLoanAmount);
 		
-		System.out.println("Amount: " + LoanAmount.getText());
-		System.out.println("Amount: " + dLoanAmount);
-		System.out.println("PMT: " + PMT);
+		LocalDate ld = LocalDate.parse(dFirstDate);
 		
 		// process inputs
-		LinkedList<Payment> payments = new LinkedList<Payment>();
-		
-		double dInterest, dPrincipal, dEndingBalance = dLoanAmount;
-		
-		for(int i = 1; i < dTerm * 12; i++) {
-			if(dEndingBalance != 0.00) {
-				dInterest = dEndingBalance * (dInterestRate/12);
-				dPrincipal = PMT - dInterest + dAdditionalPayments;
-			} else {
-				// loan payed off
-				dInterest = 0.00;
-				dPrincipal = 0.00;
-				dAdditionalPayments = 0.00;
-				PMT = 0.00;
-			}
-			
-			if(PMT + dAdditionalPayments <= dEndingBalance)
-				dEndingBalance -= dPrincipal;
-			else
-				dEndingBalance = 0.0;
-			
-			payments.add(new Payment(
-					i, // id
-					i, // dueDate
-					twoDecimals(PMT), // payment 
-					twoDecimals(dAdditionalPayments), // additionalPayment
-					twoDecimals(dInterest), // interest
-					twoDecimals(dPrincipal), // principal
-					twoDecimals(dEndingBalance)  // balance (ending)
-					));
-		}
-		
-		double dTotalPayments = 0.0, dTotalInterest = 0.0;
-		
-		for(int i = 0; i < payments.size(); i++) {
-			dTotalPayments += payments.get(i).getPayment();
-			dTotalInterest += payments.get(i).getInterest();
-		}
+		StudentLoan sl = new StudentLoan(dLoanAmount, dInterestRate, dTerm,
+				ld, dAdditionalPayments);
 		
 		// update labels
-		this.lblTotalPayments.setText(Double.toString(twoDecimals(dTotalPayments)));
-		this.lblTotalInterest.setText(Double.toString(twoDecimals(dTotalInterest)));
+		this.lblTotalPayments.setText(Double.toString(sl.getdTotalPayments()));
+		this.lblTotalInterest.setText(Double.toString(sl.getdTotalInterest()));
 		
 		// update table
 		this.loanPaymentsTable.setEditable(true);
@@ -145,35 +102,42 @@ public class LoanCalcViewController implements Initializable   {
 		this.loanPaymentsTable.getItems().clear();
 		this.loanPaymentsTable.getColumns().clear();
 		 
+		@SuppressWarnings("rawtypes")
         TableColumn paymentNumberCol = new TableColumn("Payment #");
         paymentNumberCol.setCellValueFactory(
                 new PropertyValueFactory<Payment, Integer>("id"));
  
+        @SuppressWarnings("rawtypes")
         TableColumn dueDateCol = new TableColumn("Due Date");
         dueDateCol.setCellValueFactory(
                 new PropertyValueFactory<Payment, String>("dueDate"));
  
+        @SuppressWarnings("rawtypes")
         TableColumn paymentCol = new TableColumn("Payment");
         paymentCol.setCellValueFactory(
                 new PropertyValueFactory<Payment, String>("payment"));
         
+        @SuppressWarnings("rawtypes")
         TableColumn additionalPaymentCol = new TableColumn("Additional Payment");
         additionalPaymentCol.setCellValueFactory(
                 new PropertyValueFactory<Payment, String>("additionalPayment"));
         
-        TableColumn interestCol = new TableColumn("Interest");
+        @SuppressWarnings("rawtypes")
+		TableColumn interestCol = new TableColumn("Interest");
         interestCol.setCellValueFactory(
                 new PropertyValueFactory<Payment, String>("interest"));
         
+        @SuppressWarnings("rawtypes")
         TableColumn principleCol = new TableColumn("Principle");
         principleCol.setCellValueFactory(
                 new PropertyValueFactory<Payment, String>("principal"));
         
+        @SuppressWarnings("rawtypes")
         TableColumn balanceCol = new TableColumn("Balance");
         balanceCol.setCellValueFactory(
                 new PropertyValueFactory<Payment, String>("balance"));
         
-        this.loanPaymentsData = FXCollections.observableArrayList(payments);
+        this.loanPaymentsData = FXCollections.observableArrayList(sl.getPayments());
         
         this.loanPaymentsTable.setItems(loanPaymentsData);
         this.loanPaymentsTable.getColumns().addAll(
@@ -186,8 +150,5 @@ public class LoanCalcViewController implements Initializable   {
         		balanceCol);
 		
 	}
-	
-	public static double twoDecimals(double d) {
-		return Math.floor(d * 100) / 100;
-	}
+
 }
