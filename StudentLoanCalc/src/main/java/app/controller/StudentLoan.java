@@ -76,7 +76,7 @@ public class StudentLoan {
 			
 			ld = ld.plusMonths(1L);
 			
-			if(dEndingBalance <= 0.00) {
+			if(dEndingBalance <= 0.00 && dAdditionalPayments > 0.0) {
 				// tidy up principal on last payment
 				dPrincipal = dPreviousEndingBalance - dInterest;
 				dEndingBalance = dInterest;
