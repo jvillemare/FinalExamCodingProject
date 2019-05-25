@@ -40,9 +40,22 @@ public class StudentLoan {
 				);
 		
 		// process inputs
-		double dInterest, dPrincipal, dEndingBalance = dLoanAmount;
+		double dInterest = 0.0, dPrincipal, dEndingBalance = dLoanAmount, 
+				dPreviousEndingBalance;
+		
+		boolean bTerminate = false;
 				
 		for(int i = 1; i < dTerm * 12; i++) {
+			dPreviousEndingBalance = dEndingBalance;
+			
+			if(bTerminate) {
+				break;
+			}
+			
+			if(dEndingBalance == dInterest) {
+				bTerminate = true;
+			}
+			
 			if(dEndingBalance != 0.00) {
 				dInterest = dEndingBalance * (dInterestRate/12);
 				dPrincipal = PMT - dInterest + dAdditionalPayments;
@@ -62,7 +75,13 @@ public class StudentLoan {
 				dEndingBalance = 0.0;
 			
 			ld = ld.plusMonths(1L);
-					
+			
+			if(dEndingBalance <= 0.00) {
+				// tidy up principal on last payment
+				dPrincipal = dPreviousEndingBalance - dInterest;
+				dEndingBalance = dInterest;
+			}
+			
 			this.payments.add(new Payment(
 				i, // id
 				ld, // dueDate

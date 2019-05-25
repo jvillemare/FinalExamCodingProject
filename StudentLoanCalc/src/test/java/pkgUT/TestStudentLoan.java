@@ -27,9 +27,9 @@ public class TestStudentLoan {
 		
 		StudentLoan sl = new StudentLoan(150000, 0.07, 20, LocalDate.parse("2007-09-20"), 100);
 		
-		assertEquals(106293.12, sl.getdTotalInterest(), 0.01);
-		assertEquals(236078.85, sl.getdTotalPayments(), 0.01);
-		assertEquals(0.0, sl.getPMT(), 0.01);
+		assertEquals(106293.16, sl.getdTotalInterest(), 0.01);
+		assertEquals(237241.80, sl.getdTotalPayments(), 0.01);
+		assertEquals(1162.94, sl.getPMT(), 0.01);
 		/* pmt should be set to zero at the end as the loan has been paid off
 		 * before the term ended.
 		 */
@@ -40,7 +40,7 @@ public class TestStudentLoan {
 		 * 203 payments because 20 year long, paid monthly (240 payments) 
 		 * should be payed off before then thanks to additional payments.
 		 */
-		assertEquals(203, payments.size());
+		assertEquals(204, payments.size());
 		
 	}
 
