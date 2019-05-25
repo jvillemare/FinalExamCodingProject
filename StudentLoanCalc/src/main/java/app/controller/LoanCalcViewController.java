@@ -83,9 +83,6 @@ public class LoanCalcViewController implements Initializable   {
 		String dFirstDate = FirstDate.getText();
 		double dAdditionalPayments = Double.parseDouble(AdditionalPayment.getText());
 		
-		//System.out.println("Amount: " + LoanAmount.getText());
-		//System.out.println("Amount: " + dLoanAmount);
-		
 		LocalDate ld = LocalDate.parse(dFirstDate);
 		
 		// process inputs

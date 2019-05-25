@@ -52,6 +52,8 @@ public class StudentLoan {
 				dPrincipal = 0.00;
 				dAdditionalPayments = 0.00;
 				PMT = 0.00;
+				
+				break;
 			}
 					
 			if(PMT + dAdditionalPayments <= dEndingBalance)
@@ -80,7 +82,14 @@ public class StudentLoan {
 	}
 	
 	public static double twoDecimals(double d) {
-		return Math.floor(d * 100) / 100;
+		/*
+		 * Math.round was having a few problems... apparently, I needed to 
+		 * spell this out, below:
+		 */
+		if((d * 100) % 1 <= 0.5)
+			return Math.floor(d * 100) / 100;
+		
+		return Math.ceil(d * 100) / 100;
 	}
 
 	public double getPMT() {
